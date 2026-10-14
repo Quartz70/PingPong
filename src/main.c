@@ -1,15 +1,16 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#define WINDOW_WIDTH 1100
-#define WINDOW_HEIGHT 650
+#define WINDOW_WIDTH 1366
+#define WINDOW_HEIGHT 768
 
 #define PADDLE_WIDTH 20.0f
 #define PADDLE_HEIGHT 100.0f
 #define PADDLE_PADDING 10.0f
-#define PADDLE_SPEED 300.0f // per sec
+#define PADDLE_SPEED 500.0f // per sec
 #define BALL_RADIUS 10.0f
-#define BALL_MAX_SPEED 1200.0f
+#define BALL_MAX_SPEED 1000.0f
+#define BALL_MAX_ANGLE 60
 
 typedef struct Ball {
     Vector2 center;
@@ -103,12 +104,7 @@ void BallCollisionHandle(
         float relY = (ball->center.y - myPaddle.y) / myPaddle.height;
         relY = Clamp(relY, 0.0f, 1.0f);
 
-        // 7 зон: 0..6
-        int zone = (int)(relY * 7.0f);
-        if (zone > 6) zone = 6;
-
-        // угол от горизонтали: -60°..0°..+60°
-        float angleRad = (zone - 3) * 20.0f * DEG2RAD;
+        float angleRad = (relY * 2.0f - 1.0f) * BALL_MAX_ANGLE * DEG2RAD;
 
         float speed = Vector2Length(ball->velocity);
         ball->velocity.x =  speed * cosf(angleRad);  // всегда вправо

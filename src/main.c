@@ -18,6 +18,12 @@ typedef struct Ball {
     Vector2 velocity;
 } Ball;
 
+Vector2 Vector2RotateAround(Vector2 v1, Vector2 v2, float angle) {
+    Vector2 v2v1 = Vector2Subtract(v1, v2);
+    Vector2 v2v1R = Vector2Rotate(v2v1, angle);
+    return Vector2Add(v2, v2v1R);
+}
+
 void MyPaddleMoveHandle(
     const float frameTime, 
     Rectangle *myPaddle
@@ -179,6 +185,42 @@ void GameRender(Rectangle *myPaddle, Rectangle *opponentPaddle, Ball *ball) {
         DrawRectangleRec(*myPaddle, BLUE);
         DrawRectangleRec(*opponentPaddle, RED);
         DrawCircle(ball->center.x, ball->center.y, ball->radius, WHITE);
+
+        Vector2 line1Begin;
+        line1Begin.x = ball->center.x - ball->radius - 5.0f;
+        line1Begin.y = ball->center.y - ball->radius / 2.0f;
+        Vector2 line1End;
+        line1End.x = line1Begin.x - 20.0f;
+        line1End.y = line1Begin.y;
+
+        Vector2 line2Begin;
+        line2Begin.x = ball->center.x - ball->radius - 7.0f;
+        line2Begin.y = ball->center.y;
+        Vector2 line2End;
+        line2End.x = line2Begin.x - 20.0f;
+        line2End.y = line2Begin.y;
+
+        Vector2 line3Begin;
+        line3Begin.x = ball->center.x - ball->radius - 5.0f;
+        line3Begin.y = ball->center.y + ball->radius / 2.0f;
+        Vector2 line3End;
+        line3End.x = line3Begin.x - 20.0f;
+        line3End.y = line3Begin.y;
+
+        float ballAngle = Vector2Angle((Vector2){1.0f, 0.0f}, ball->velocity);
+
+        line1Begin = Vector2RotateAround(line1Begin, ball->center, ballAngle);
+        line1End = Vector2RotateAround(line1End, ball->center, ballAngle);
+
+        line2Begin = Vector2RotateAround(line2Begin, ball->center, ballAngle);
+        line2End = Vector2RotateAround(line2End, ball->center, ballAngle);
+
+        line3Begin = Vector2RotateAround(line3Begin, ball->center, ballAngle);
+        line3End = Vector2RotateAround(line3End, ball->center, ballAngle);
+
+        DrawLineEx(line1Begin, line1End, 2.0f, (Color){255, 255, 255, 120});
+        DrawLineEx(line2Begin, line2End, 2.0f, (Color){255, 255, 255, 120});
+        DrawLineEx(line3Begin, line3End, 2.0f, (Color){255, 255, 255, 120});
     EndDrawing();
 }
 

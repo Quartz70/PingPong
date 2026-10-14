@@ -91,6 +91,13 @@ void OpponentPaddleMoveHandle(
         opponentPaddle->y = (float)WINDOW_HEIGHT - opponentPaddle->height;
 }
 
+float BallBounceAngle(float ballCenterY, Rectangle paddle) {
+    // relY: 0 — верх ракетки, 1 — низ
+    float relY = (ballCenterY - paddle.y) / paddle.height;
+    relY = Clamp(relY, 0.0f, 1.0f);
+    return (relY * 2.0f - 1.0f) * BALL_MAX_ANGLE * DEG2RAD;
+}
+
 void BallCollisionHandle(
     Rectangle myPaddle,
     Rectangle opponentPaddle,
@@ -100,11 +107,7 @@ void BallCollisionHandle(
     if (CheckCollisionCircleRec(ball->center, ball->radius, myPaddle)
         && ball->velocity.x < 0.0f)   // летит в сторону ракетки
     {
-        // relY: 0 — верх ракетки, 1 — низ
-        float relY = (ball->center.y - myPaddle.y) / myPaddle.height;
-        relY = Clamp(relY, 0.0f, 1.0f);
-
-        float angleRad = (relY * 2.0f - 1.0f) * BALL_MAX_ANGLE * DEG2RAD;
+        float angleRad = BallBounceAngle(ball->center.y, myPaddle);
 
         float speed = Vector2Length(ball->velocity);
         ball->velocity.x =  speed * cosf(angleRad);  // всегда вправо
@@ -118,13 +121,7 @@ void BallCollisionHandle(
     if (CheckCollisionCircleRec(ball->center, ball->radius, opponentPaddle)
         && ball->velocity.x > 0.0f)
     {
-        float relY = (ball->center.y - opponentPaddle.y) / opponentPaddle.height;
-        relY = Clamp(relY, 0.0f, 1.0f);
-
-        int zone = (int)(relY * 7.0f);
-        if (zone > 6) zone = 6;
-
-        float angleRad = (zone - 3) * 20.0f * DEG2RAD;
+        float angleRad = BallBounceAngle(ball->center.y, opponentPaddle);
 
         float speed = Vector2Length(ball->velocity);
         ball->velocity.x = -speed * cosf(angleRad);  // всегда влево

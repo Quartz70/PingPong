@@ -2,8 +2,8 @@
 
 Требования: raylib, gcc, make.
 
-    make          # собрать и запустить
-    make compile  # только собрать
-    make run      # только запустить
+Сброка коммандой:
+
+    make
 
 **makefile написан только под linux**

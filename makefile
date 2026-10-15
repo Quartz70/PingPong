@@ -1,12 +1,7 @@
-compiler = gcc
 args = -std=c99 -pedantic -Wall -Wextra
 source = $(wildcard src/*.c)
 result = PingPong.exe
-libs = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+libs = -lraylib -lm -lX11
 
-all: compile run
-
-compile:
-	$(compiler) $(args) $(source) -o $(result) $(libs)
-run:
-	./$(result)
+all:
+	gcc $(args) $(source) -o $(result) $(libs)

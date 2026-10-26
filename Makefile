@@ -1,7 +1,8 @@
-args = -std=c99 -pedantic -Wall -Wextra
-source = $(wildcard src/*.c)
-result = PingPong.exe
-libs = -lraylib -lm -lX11
+CC = gcc
+CFLAGS = -std=c99 -pedantic -Wall -Wextra
+SRC = $(wildcard src/*.c)
+TARGET = PingPong.exe
+LDLIBS = -lraylib -lm -lX11
 
 all:
-	gcc $(args) $(source) -o $(result) $(libs)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LDLIBS)
